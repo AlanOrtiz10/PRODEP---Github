@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('nombre_profesor');
             $table->string('nombre_carrera');
             $table->string('nombre_director_carrera');
-            $table->string('cuatrimestre')->nullable(); // Cambiado a nullable
+            $table->integer('cuatrimestre')->nullable(); 
             $table->string('grupo');
             $table->string('asignatura');
             $table->integer('numero_alumnos');
             $table->integer('asesorias_mes');
-            $table->integer('horas_extras_mes')->nullable(); // Cambiado a nullable
+            $table->integer('horas_extras_mes')->nullable(); 
             $table->integer('horas_semanales_curso');
             $table->string('periodo_escolar');
             $table->timestamps();

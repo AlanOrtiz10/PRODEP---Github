@@ -21,6 +21,17 @@
         .table-responsive {
             margin: 30px 0;
         }
+
+        .btn-primary {
+        background-color: #910E4B !important;
+        border-color: #910E4B !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #7e0c40 !important;
+            border-color: #7e0c40 !important;
+        }
+
         .table-wrapper {
             min-width: 1000px;
             background: #fff;
@@ -30,7 +41,7 @@
         }
         .table-title {
             padding-bottom: 15px;
-            background: #299be4;
+            background: #910E4B;
             color: #fff;
             padding: 16px 30px;
             margin: -20px -25px 10px;
@@ -99,10 +110,10 @@
             text-decoration: none;
         }
         table.table td a:hover {
-            color: #2196F3;
+            color: #910E4B;
         }
         table.table td a.settings {
-            color: #2196F3;
+            color: #910E4B;
         }
         table.table td a.delete {
             color: #F44336;
@@ -121,7 +132,7 @@
             color: #10c469;
         }
         .text-info {
-            color: #62c9e8;
+            color: #910E4B;
         }
         .text-warning {
             color: #FFC107;
@@ -149,10 +160,10 @@
             color: #666;
         }    
         .pagination li.active a, .pagination li.active a.page-link {
-            background: #03A9F4;
+            background: #910E4B;
         }
         .pagination li.active a:hover {        
-            background: #0397d6;
+            background: #910E4B;
         }
         .pagination li.disabled i {
             color: #ccc;
@@ -227,7 +238,6 @@
                             <th>Alumnos</th>
                             <th>Asesorias Mes</th>
                             <th>Horas Semanales</th>
-                            <th>Horas Extras</th>
 
                             <th>Periodo</th>
 
@@ -240,12 +250,11 @@
                             <td>{{ $row->nombre_profesor }}</td>
                             <td>{{ $row->nombre_carrera }}</td>
                             <td>{{ $row->grupo }}</td>
-                            <td>{{ $row->cuatrimestre ? $row->cuatrimestre . '$' : 'No especificado' }}</td>
+                            <td>{{ $row->cuatrimestre ? $row->cuatrimestre . '' : 'No especificado' }}</td>
                             <td>{{ $row->asignatura }}</td>
                             <td>{{ $row->numero_alumnos }}</td>
                             <td>{{ $row->asesorias_mes }}</td>
                             <td>{{ $row->horas_semanales_curso }}</td>
-                            <td>{{ $row->horas_extras_mes ? $row->horas_extras_mes . '$' : 'N/A' }}</td>
                             <td>{{ $row->periodo_escolar }}</td>
 
                         </tr>
