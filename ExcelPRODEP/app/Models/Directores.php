@@ -14,4 +14,10 @@ class Directores extends Model
         'nivel',
         'director',
     ];
+
+    // Definir la relación de uno a muchos con el modelo Docencia
+    public function docencias()
+    {
+        return $this->hasMany(Docencia::class, 'director_id');
+    }
 }

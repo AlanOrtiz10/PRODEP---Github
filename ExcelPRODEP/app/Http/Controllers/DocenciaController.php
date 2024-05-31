@@ -9,6 +9,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class DocenciaController extends Controller
 {
+
+    
     public function form()
 {
     $data = Docencia::paginate(10); 
@@ -59,7 +61,7 @@ public function import(Request $request)
 private function getPeriodoEscolar($file)
 {
     $excelReader = Excel::toArray([], $file)[0];
-    return $excelReader[2][0] ?? null; // Obtener el periodo escolar desde la tercera fila, primera columna del archivo Excel
+    return $excelReader[2][0] ?? null; 
 }
 
 }

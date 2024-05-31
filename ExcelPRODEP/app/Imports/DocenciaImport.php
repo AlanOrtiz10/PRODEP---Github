@@ -2,6 +2,8 @@
 
 namespace App\Imports;
 
+use App\Models\Directores;
+use App\Models\Docencia;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
@@ -31,9 +33,7 @@ class DocenciaImport implements ToCollection
         $asesorias_mes = $rows->slice(5)->pluck(7)->toArray();
         $horas_semanales_curso = $rows->slice(5)->pluck(6)->toArray();
 
-        // Iterar sobre los datos y omitir los registros con "ESTADIAS" en la materia
         foreach ($maestros as $key => $maestro) {
-            // Omitir registros donde la materia contenga "ESTADIA" o "ESTADIA INGENIERÍA"
             if (stripos($materias[$key], 'ESTADÍA') === false && stripos($materias[$key], 'ESTADIA INGENIERÍA') === false) {
                 // Validar si hay datos nulos
                 $errorMessages = [];
@@ -65,20 +65,24 @@ class DocenciaImport implements ToCollection
                     $errorMessages[] = "En el registro " . ($key + 6) . " hubo un error ya que las horas semanales de curso debe ser un valor numérico.";
                 }
 
-                // Si hay errores, devuelve un mensaje de error y termina la importación
                 if (!empty($errorMessages)) {
                     $errorMessage = implode("<br>", $errorMessages);
                     throw new \Exception($errorMessage);
                 }
 
-                // Extraer cuatrimestre del grupo
                 $cuatrimestre = $this->extractCuatrimestre($grupos[$key]);
+
+                // Buscar el director de la carrera
+                $director = Directores::where('carrera', $carreras[$key])->first();
+                if (!$director) {
+                    throw new \Exception("No se encontró un director para la carrera: " . $carreras[$key]);
+                }
 
                 // Agregar datos válidos a la propiedad $data
                 $this->data[] = [
                     'nombre_profesor' => $maestro,
                     'nombre_carrera' => $carreras[$key],
-                    'nombre_director_carrera' => 'Alan Ortiz',
+                    'director_id' => $director->id,
                     'cuatrimestre' => $cuatrimestre,
                     'horas_extras_mes' => null,
                     'grupo' => $grupos[$key],
