@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\DocenciaController;
 use App\Http\Controllers\TutoriasController;
 use Illuminate\Support\Facades\Route;
@@ -27,5 +28,11 @@ Route::post('docencia-importar', [DocenciaController::class, 'import'])->name('i
 
 Route::get('tutorias-importar', [TutoriasController::class, 'form'])->name('import.form');
 Route::post('tutorias-importar', [TutoriasController::class, 'import'])->name('import.excel');
+
+Route::get('/admin', [DashboardController::class, 'indexPage'])->name('index');
+
+Route::get('/tutorias', [TutoriasController::class, 'form'])->name('import.form');
+
+
 
 

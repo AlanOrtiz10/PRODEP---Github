@@ -9,11 +9,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class TutoriasController extends Controller
 {
-   
+    
+
     public function form()
     {
         $data = Tutorias::paginate(10); 
-        return view('tutorias', compact('data'));
+        return view('admin.pages.tutorias.index', compact('data'));
     }
 
 
