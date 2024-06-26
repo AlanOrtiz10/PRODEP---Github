@@ -17,7 +17,7 @@ class DocenciaController extends Controller
     $profesores = Docencia::select('nombre_profesor', 'nombre_carrera')->distinct()->get()->groupBy('nombre_profesor')->map(function ($profesor) {
         return $profesor->pluck('nombre_carrera')->unique();
     });
-    return view('formulario', compact('data', 'profesores'));
+    return view('admin.pages.docencias.index', compact('data', 'profesores'));
 }
 
 

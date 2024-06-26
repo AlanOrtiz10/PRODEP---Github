@@ -1,13 +1,13 @@
 @extends('admin.layouts.base')
 @section('title', 'Tutorias')
 @section('content')
-<h1 class="h3 mb-4 h3-custom">Datos de Tutorías</h1>
+<h1 class="h3 mb-4 h3-custom">Datos de Docencia</h1>
 
 <!-- Breadcrumb -->
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('index') }}">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('import.tutorias') }}">Tutorías</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('import.docencia') }}">Docencia</a></li>
     </ol>
 </nav>
 
@@ -27,6 +27,8 @@
 </div>
 @endif
 
+
+
 <div class="d-flex justify-content-center align-items-center mb-3 mt-4">
     <div class="mr-auto">
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
@@ -38,13 +40,13 @@
         <div class="d-inline-block">
             <div class="export-option">
                 <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
-            </div>
-            <div class="export-option ml-1">
+            </div><div class="export-option ml-1">
                 <img src="{{ asset('/assets/img/PDFLogo.png') }}" alt="PDFLogo" class="export-icon"> PDF
             </div>
         </div>
     </div>
 </div>
+
 
 @if($data->isNotEmpty())
 <div class="card shadow mb-5 mt-4">
@@ -54,26 +56,28 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Fecha</th>
-                        <th>Tutor</th>
-                        <th>Tipo</th>
-                        <th>Grupo</th>
-                        <th>Alumno(s)</th>
-                        <th>Estatus</th>
-                        <th>Motivo</th>
-                        <th>Periodo</th>
+                            <th>Profesor</th>
+                            <th>Carrera</th>
+                            <th>Grupo</th>
+                            <th>Cuatrimestre</th>
+                            <th>Asignatura</th>
+                            <th>Alumnos</th>
+                            <th>Asesorias Mes</th>
+                            <th>Hrs. Semanales</th>
+                            <th>Periodo</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>#</th>
-                        <th>Fecha</th>
-                        <th>Tutor</th>
-                        <th>Tipo</th>
+                        <th>Profesor</th>
+                        <th>Carrera</th>
                         <th>Grupo</th>
-                        <th>Alumno(s)</th>
-                        <th>Estatus</th>
-                        <th>Motivo</th>
+                        <th>Cuatrimestre</th>
+                        <th>Asignatura</th>
+                        <th>Alumnos</th>
+                        <th>Asesorias Mes</th>
+                        <th>Hrs. Semanales</th>
                         <th>Periodo</th>
                     </tr>
                 </tfoot>
@@ -81,25 +85,18 @@
                     @foreach ($data as $row)
                     <tr>
                         <td>{{ $row->id }}</td>
-                        <td>{{ $row->fecha_registro }}</td>
-                        <td>{{ $row->tutor }}</td>
-                        <td>{{ $row->tipo_tutoria }}</td>
-                        <td>{{ $row->grupo ? $row->grupo : 'No especificado' }}</td>
-                        <td>{{ $row->alumno ? $row->alumno : 'Todo el grupo' }}</td>
-                        <td>
-                            @if ($row->estatus == 'ABIERTA')
-                            <span class="texto-abierto">{{ ucwords(strtolower($row->estatus)) }}</span>
-                            @elseif ($row->estatus == 'CERRADA')
-                            <span class="texto-cerrado">{{ ucwords(strtolower($row->estatus)) }}</span>
-                            @else
-                            {{ $row->estatus }}
-                            @endif
-                        </td>
-                        <td>{{ $row->motivo }}</td>
-                        <td>{{ $row->periodo }}</td>
+                        <td>{{ $row->nombre_profesor }}</td>
+                        <td>{{ $row->nombre_carrera }}</td>
+                        <td>{{ $row->grupo }}</td>
+                        <td>{{ $row->cuatrimestre ? $row->cuatrimestre . '' : 'No especificado' }}</td>
+                        <td>{{ $row->asignatura }}</td>
+                        <td>{{ $row->numero_alumnos }}</td>
+                        <td>{{ $row->asesorias_mes }}</td>
+                        <td>{{ $row->horas_semanales_curso }}</td>
+                        <td>{{ $row->periodo_escolar }}</td>
+
                     </tr>
                     @endforeach
-
                 </tbody>
             </table>
             <div class="clearfix">
@@ -155,7 +152,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('import.excel.tutorias') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('import.excel.docencia') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -172,4 +169,7 @@
     </div>
 </div>
 
+
 @endsection
+
+
