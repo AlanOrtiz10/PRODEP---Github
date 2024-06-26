@@ -36,13 +36,16 @@
     <div class="text-right ml-auto">
         Exportar a
         <div class="d-inline-block">
-            <div class="export-option">
-                <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
-            </div>
+            <a href="{{route('export.tutorias')}}">
+                <div class="export-option">
+                    <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
+                </div>
+            </a>
             <div class="export-option ml-1">
                 <img src="{{ asset('/assets/img/PDFLogo.png') }}" alt="PDFLogo" class="export-icon"> PDF
             </div>
         </div>
+        
     </div>
 </div>
 

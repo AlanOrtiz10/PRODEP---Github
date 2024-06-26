@@ -26,8 +26,12 @@ Route::get('/', function () {
 
 Route::get('/admin', [DashboardController::class, 'indexPage'])->name('index');
 
+// Rutas de Tutorias
 Route::get('/admin/tutorias', [TutoriasController::class, 'form'])->name('import.tutorias');
 Route::post('/admin/tutorias/importar', [TutoriasController::class, 'import'])->name('import.excel.tutorias');
+Route::get('/admin/tutorias/export', [TutoriasController::class, 'export'])->name('export.tutorias');
+
+
 
 Route::get('/admin/docencia', [DocenciaController::class, 'form'])->name('import.docencia');
 Route::post('/admin/docencia/importar', [DocenciaController::class, 'import'])->name('import.excel.docencia');

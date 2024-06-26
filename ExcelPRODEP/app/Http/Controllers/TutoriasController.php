@@ -6,6 +6,7 @@ use App\Imports\TutoriasImport;
 use App\Models\Tutorias;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TutoriasExport;
 
 class TutoriasController extends Controller
 {
@@ -58,6 +59,11 @@ class TutoriasController extends Controller
     {
         $excelReader = Excel::toArray([], $file)[0];
         return $excelReader[2][0] ?? null;
+    }
+
+    public function export()
+    {
+        return Excel::download(new TutoriasExport, 'tutorias.xlsx');
     }
 
 
