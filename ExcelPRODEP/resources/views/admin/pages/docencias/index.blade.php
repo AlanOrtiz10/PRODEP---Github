@@ -1,5 +1,5 @@
 @extends('admin.layouts.base')
-@section('title', 'Tutorias')
+@section('title', 'Docencia')
 @section('content')
 <h1 class="h3 mb-4 h3-custom">Datos de Docencia</h1>
 
@@ -27,8 +27,6 @@
 </div>
 @endif
 
-
-
 <div class="d-flex justify-content-center align-items-center mb-3 mt-4">
     <div class="mr-auto">
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
@@ -40,13 +38,15 @@
         <div class="d-inline-block">
             <div class="export-option">
                 <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
-            </div><div class="export-option ml-1">
-                <img src="{{ asset('/assets/img/PDFLogo.png') }}" alt="PDFLogo" class="export-icon"> PDF
+            </div>
+            <div class="export-option ml-1">
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#constanciaModal">
+                    Word
+                </button>
             </div>
         </div>
     </div>
 </div>
-
 
 @if($data->isNotEmpty())
 <div class="card shadow mb-5 mt-4">
@@ -56,15 +56,16 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                            <th>Profesor</th>
-                            <th>Carrera</th>
-                            <th>Grupo</th>
-                            <th>Cuatrimestre</th>
-                            <th>Asignatura</th>
-                            <th>Alumnos</th>
-                            <th>Asesorias Mes</th>
-                            <th>Hrs. Semanales</th>
-                            <th>Periodo</th>
+                        <th>Profesor</th>
+                        <th>Carrera</th>
+                        <th>Grupo</th>
+                        <th>Cuatrimestre</th>
+                        <th>Asignatura</th>
+                        <th>Alumnos</th>
+                        <th>Asesorias Mes</th>
+                        <th>Hrs. Semanales</th>
+                        <th>Periodo</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -79,6 +80,7 @@
                         <th>Asesorias Mes</th>
                         <th>Hrs. Semanales</th>
                         <th>Periodo</th>
+                        <th>Acciones</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -88,13 +90,15 @@
                         <td>{{ $row->nombre_profesor }}</td>
                         <td>{{ $row->nombre_carrera }}</td>
                         <td>{{ $row->grupo }}</td>
-                        <td>{{ $row->cuatrimestre ? $row->cuatrimestre . '' : 'No especificado' }}</td>
+                        <td>{{ $row->cuatrimestre ? $row->cuatrimestre : 'No especificado' }}</td>
                         <td>{{ $row->asignatura }}</td>
                         <td>{{ $row->numero_alumnos }}</td>
                         <td>{{ $row->asesorias_mes }}</td>
                         <td>{{ $row->horas_semanales_curso }}</td>
                         <td>{{ $row->periodo_escolar }}</td>
-
+                        <td>
+                            <a href="{{ route('generate.doc', $row->id) }}" class="btn btn-primary btn-sm">Exportar a Word</a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -169,7 +173,83 @@
     </div>
 </div>
 
+<!-- Modal para generar constancia de docencia -->
+<div class="modal fade" id="constanciaModal" tabindex="-1" role="dialog" aria-labelledby="constanciaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="constanciaModalLabel">Generar constancia de Docencia</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="nombreProfesor">Nombre del profesor:</label>
+                        <select class="form-control select2" id="nombreProfesor" data-placeholder="Selecciona un maestro">
+                            <option value="" hidden>Selecciona un maestro</option> <!-- Opción por defecto oculta -->
+                            @foreach($profesores as $profesor => $carreras)
+                                <option value="{{ $profesor }}" data-carreras="{{ json_encode($carreras) }}">{{ $profesor }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="carrera">Carreras disponibles:</label>
+                        <select class="form-control" id="carrera">
+                            <!-- Opciones del select -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cuatrimestre">Cuatrimestre:</label>
+                        <select class="form-control" id="cuatrimestre">
+                            <!-- Opciones del select -->
+                            @for ($i = 1; $i <= 10; $i++)
+                            <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="horasExtras">Horas extras de enseñanza al mes:</label>
+                        <select class="form-control" id="horasExtras">
+                            <!-- Opciones del select -->
+                            @for ($i = 1; $i <= 10; $i++)
+                            <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Generar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
-
+<!-- Agregar enlaces a Bootstrap JS y sus dependencias -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Agregar Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<!-- Script personalizado -->
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+        $('#nombreProfesor').on('change', function() {
+            var carreras = $(this).find('option:selected').data('carreras');
+            $('#carrera').empty();
+            $.each(carreras, function(index, carrera) {
+                $('#carrera').append($('<option>', {
+                    value: carrera,
+                    text: carrera
+                }));
+            });
+            $('#carrera').trigger('change');
+        });
+    });
+</script>

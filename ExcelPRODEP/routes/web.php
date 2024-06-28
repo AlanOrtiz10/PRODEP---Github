@@ -46,6 +46,8 @@ Route::put('/directores/{id}', [DirectoresController::class, 'update'])->name('d
 Route::delete('/directores/{id}', [DirectoresController::class, 'destroy'])->name('directores.destroy');
 
 
+// Ruta para generar documento
+Route::get('/generate-doc/{id}', [DocenciaController::class, 'generateDoc'])->name('generate.doc');
 
 
 
