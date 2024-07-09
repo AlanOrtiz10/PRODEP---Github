@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DirectoresExport;
 use Illuminate\Http\Request;
 use App\Models\Directores;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DirectoresController extends Controller
 {
@@ -60,5 +62,10 @@ class DirectoresController extends Controller
         $director->delete();
 
         return redirect()->route('directores')->with('success', 'Director eliminado correctamente');
+    }
+
+    public function export()
+    {
+        return Excel::download(new DirectoresExport, 'directores.xlsx');
     }
 }

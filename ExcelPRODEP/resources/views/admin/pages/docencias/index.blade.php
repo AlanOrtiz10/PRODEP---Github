@@ -36,9 +36,11 @@
     <div class="text-right ml-auto">
         Exportar a
         <div class="d-inline-block">
-            <div class="export-option">
-                <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
-            </div>
+            <a href="{{route('export.docencia')}}">
+                <div class="export-option">
+                    <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
+                </div>
+            </a>
             <div class="export-option ml-1">
                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#constanciaModal">
                     Word

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DocenciasExport;
 use App\Imports\DocenciaImport;
 use App\Models\Docencia;
 use Illuminate\Http\Request;
@@ -86,4 +87,13 @@ class DocenciaController extends Controller
         // Descargar el archivo
         return response()->download(storage_path('app/public/' . $fileName))->deleteFileAfterSend(true);
     }
+
+    public function export()
+    {
+        return Excel::download(new DocenciasExport, 'docencia.xlsx');
+    }
+
+
+
+
 }

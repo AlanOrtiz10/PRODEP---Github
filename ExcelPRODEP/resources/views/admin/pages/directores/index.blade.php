@@ -43,9 +43,11 @@
     <div class="text-right ml-auto">
         Exportar a
         <div class="d-inline-block">
-            <div class="export-option">
-                <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
-            </div>
+            <a href="{{route('export.directores')}}">
+                <div class="export-option">
+                    <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
+                </div>
+            </a>
         </div>
     </div>
 </div>

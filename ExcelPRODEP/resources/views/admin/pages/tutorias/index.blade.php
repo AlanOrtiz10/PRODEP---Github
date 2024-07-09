@@ -176,3 +176,28 @@
 </div>
 
 @endsection
+
+<!-- Agregar enlaces a Bootstrap JS y sus dependencias -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Agregar Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<!-- Script personalizado -->
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+        $('#nombreProfesor').on('change', function() {
+            var carreras = $(this).find('option:selected').data('carreras');
+            $('#carrera').empty();
+            $.each(carreras, function(index, carrera) {
+                $('#carrera').append($('<option>', {
+                    value: carrera,
+                    text: carrera
+                }));
+            });
+            $('#carrera').trigger('change');
+        });
+    });
+</script>
+
