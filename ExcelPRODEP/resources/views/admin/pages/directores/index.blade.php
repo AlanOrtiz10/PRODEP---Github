@@ -45,7 +45,7 @@
         <div class="d-inline-block">
             <a href="{{route('export.directores')}}">
                 <div class="export-option">
-                    <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
+                    <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
                 </div>
             </a>
         </div>

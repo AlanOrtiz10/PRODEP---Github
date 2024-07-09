@@ -38,11 +38,11 @@
         <div class="d-inline-block">
             <a href="{{route('export.tutorias')}}">
                 <div class="export-option">
-                    <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
+                    <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
                 </div>
             </a>
             <div class="export-option ml-1">
-                <img src="{{ asset('/assets/img/PDFLogo.png') }}" alt="PDFLogo" class="export-icon"> PDF
+                <img src="{{ asset('/assets/img/WordLogo.svg') }}" alt="WordLogo" class="export-icon"> Word
             </div>
         </div>
         

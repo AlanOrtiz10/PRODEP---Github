@@ -38,14 +38,15 @@
         <div class="d-inline-block">
             <a href="{{route('export.docencia')}}">
                 <div class="export-option">
-                    <img src="{{ asset('/assets/img/ExcelLogo.png') }}" alt="ExcelLogo" class="export-icon"> Excel
+                    <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
                 </div>
             </a>
-            <div class="export-option ml-1">
-                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#constanciaModal">
-                    Word
-                </button>
-            </div>
+            <a href="#" data-toggle="modal" data-target="#constanciaModal">
+                <div class="export-option">
+                    <img src="{{ asset('/assets/img/WordLogo.svg') }}" alt="WordLogo" class="export-icon"> Word
+                </div>
+            </a>
+            
         </div>
     </div>
 </div>
