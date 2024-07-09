@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/docencia', [DocenciaController::class, 'form'])->name('import.docencia');
     Route::post('/admin/docencia/importar', [DocenciaController::class, 'import'])->name('import.excel.docencia');
     Route::get('/admin/docencia/export', [DocenciaController::class, 'export'])->name('export.docencia');
+    Route::get('/generate-doc/{id}', [DocenciaController::class, 'generateDoc'])->name('generate.doc');
+
 
     // Rutas para directores
     Route::get('/admin/directores', [DirectoresController::class, 'form'])->name('directores');
@@ -56,5 +58,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/directores/{id}', [DirectoresController::class, 'destroy'])->name('directores.destroy');
     Route::get('/admin/directores/export', [DirectoresController::class, 'export'])->name('export.directores');
 
-    // Otras rutas protegidas...
 });
