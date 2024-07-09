@@ -43,7 +43,7 @@
             </div>
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.pages.dashboard.index')}}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Panel de control</span></a>
             </li>
