@@ -49,6 +49,12 @@
     </div>
 </div>
 
+@if($data->isEmpty())
+<div class="alert alert-warning">
+    No se encontraron datos asociados a su cuenta de tutorías.
+</div>
+@endif
+
 @if($data->isNotEmpty())
 <div class="card shadow mb-5 mt-4">
     <div class="card-body">
@@ -194,4 +200,3 @@
         });
     });
 </script>
-

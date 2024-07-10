@@ -7,16 +7,38 @@ use App\Models\Tutorias;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TutoriasExport;
+use Illuminate\Support\Facades\Auth;
 
 class TutoriasController extends Controller
 {
     
 
     public function form()
-    {
-        $data = Tutorias::paginate(10); 
-        return view('admin.pages.tutorias.index', compact('data'));
+{
+    $user = auth()->user();
+
+    if($user->level_id == 1){
+        $data = Tutorias::paginate(10);
+
     }
+    elseif ($user->level_id == 2) {
+        $formattedName = $user->apellido_paterno . ' ' . $user->apellido_materno . ' ' . $user->name;
+
+        $data = Tutorias::whereRaw('BINARY tutor = ?', [$formattedName])->paginate(10);
+    }
+
+    
+    
+    
+    //dd($formattedName);
+    // dd($data);
+
+    return view('admin.pages.tutorias.index', compact('data'));
+}
+
+    
+    
+
 
 
     public function import(Request $request)
