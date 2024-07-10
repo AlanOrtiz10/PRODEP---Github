@@ -106,8 +106,13 @@
                         <td>{{ $row->horas_semanales_curso }}</td>
                         <td>{{ $row->periodo_escolar }}</td>
                         <td>
-                            <a href="{{ route('generate.doc', $row->id) }}" class="btn btn-primary btn-sm">Exportar a Word</a>
+                            <a href="{{ route('generate.doc', $row->id) }}">
+                                <div class="export-option">
+                                    <img src="{{ asset('/assets/img/WordLogo.svg') }}" alt="WordLogo" class="export-icon">
+                                </div>
+                            </a>
                         </td>
+                       
                     </tr>
                     @endforeach
                 </tbody>
