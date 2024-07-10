@@ -6,6 +6,7 @@ use App\Http\Controllers\DocenciaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TutoriasController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +35,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/registro', [RegisterController::class, 'register']);
 });
 
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
 // Ruta General del Panel Administrativo
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [DashboardController::class, 'indexPage'])->name('admin.pages.dashboard.index');
@@ -49,13 +53,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/docencia/export', [DocenciaController::class, 'export'])->name('export.docencia');
     Route::get('/generate-doc/{id}', [DocenciaController::class, 'generateDoc'])->name('generate.doc');
 
+    // Rutas de Usuarios
+    Route::get('/admin/usuarios', [UsersController::class, 'form'])->name('index.usuarios');
+
+
 
     // Rutas para directores
     Route::get('/admin/directores', [DirectoresController::class, 'form'])->name('directores');
     Route::post('/directores', [DirectoresController::class, 'store'])->name('directores.store');
     Route::get('/directores/{id}/edit', [DirectoresController::class, 'edit'])->name('directores.edit');
     Route::put('/directores/{id}', [DirectoresController::class, 'update'])->name('directores.update');
-    Route::delete('/directores/{id}', [DirectoresController::class, 'destroy'])->name('directores.destroy');
+    Route::delete('/admin/directores/{id}', [DirectoresController::class, 'destroy'])->name('directores.destroy');
     Route::get('/admin/directores/export', [DirectoresController::class, 'export'])->name('export.directores');
 
 });

@@ -17,12 +17,10 @@ return new class extends Migration
             $table->string('apellido_paterno'); // Nuevo campo
             $table->string('apellido_materno'); // Nuevo campo
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable(); // Eliminado
             $table->string('password');
             $table->string('genero'); // Nuevo campo
             $table->date('fecha_nacimiento'); // Nuevo campo
             $table->string('curp'); // Nuevo campo
-            $table->rememberToken();
             $table->timestamps();
         });
     }

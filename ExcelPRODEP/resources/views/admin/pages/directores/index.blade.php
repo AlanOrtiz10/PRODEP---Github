@@ -94,12 +94,14 @@
                                 <i class="fas fa-edit"></i>
                             </a>
                             <a href="#" class="btn btn-sm btn-primary ml-2 delete-director-btn"
-                               title="Eliminar"
-                               data-toggle="modal"
-                               data-target="#deleteDirectorModal"
-                               data-id="{{ $row->id }}">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
+                            title="Eliminar"
+                            data-toggle="modal"
+                            data-target="#deleteDirectorModal"
+                            data-id="{{ $row->id }}">
+                            <i class="fas fa-trash-alt"></i>
+                         </a>
+                         
+                         
                         </td>
                         
                     </tr>
@@ -241,7 +243,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="deleteDirectorForm" method="POST">
+            <form id="deleteDirectorForm" action="{{ route('directores.destroy', $row['id']) }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
@@ -255,6 +257,7 @@
         </div>
     </div>
 </div>
+
 
 @endsection
 
@@ -288,5 +291,19 @@
     $('#editDirectorModal').on('hidden.bs.modal', function () {
         $('#editDirectorForm').trigger('reset');
     });
+
 </script>
+
+<script>
+    $(document).ready(function () {
+        $('.delete-director-btn').click(function () {
+            var id = $(this).data('id');
+            var url = '{{ url('admin/directores') }}/' + id;
+            $('#deleteDirectorForm').attr('action', url);
+        });
+    });
+    </script>
+    
+
+
 @endsection

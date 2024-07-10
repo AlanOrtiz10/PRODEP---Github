@@ -26,4 +26,12 @@ class LoginController extends Controller
     Log::info('User authenticated: ' . Auth::user()->email);
     return redirect()->route('admin.pages.dashboard.index');
 }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
+    }
 }

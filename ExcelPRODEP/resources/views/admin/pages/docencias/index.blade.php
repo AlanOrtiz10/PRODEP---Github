@@ -16,14 +16,10 @@
     {{ session('success') }}
 </div>
 @endif
+
 @if(session('error'))
 <div class="alert alert-danger">
     {{ session('error') }}
-</div>
-@endif
-@if ($errors->has('file'))
-<div class="alert alert-danger">
-    {{ $errors->first('file') }}
 </div>
 @endif
 
@@ -114,28 +110,13 @@
                     @else
                         <li class="page-item"><a href="{{ $data->previousPageUrl() }}" class="page-link">Anterior</a></li>
                     @endif
-                    
-                    @php
-                        $start = max(1, $data->currentPage() - 4);
-                        $end = min($start + 9, $data->lastPage());
-                    @endphp
-                    
-                    @if ($start > 1)
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    @endif
-                    
-                    @for ($i = $start; $i <= $end; $i++)
-                        @if ($i == $data->currentPage())
-                            <li class="page-item active"><span class="page-link">{{ $i }}</span></li>
-                        @else
-                            <li class="page-item"><a href="{{ $data->url($i) }}" class="page-link">{{ $i }}</a></li>
-                        @endif
+
+                    @for ($i = 1; $i <= $data->lastPage(); $i++)
+                        <li class="page-item {{ $i == $data->currentPage() ? 'active' : '' }}">
+                            <a href="{{ $data->url($i) }}" class="page-link">{{ $i }}</a>
+                        </li>
                     @endfor
-                    
-                    @if ($end < $data->lastPage())
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    @endif
-                    
+
                     @if ($data->hasMorePages())
                         <li class="page-item"><a href="{{ $data->nextPageUrl() }}" class="page-link">Siguiente</a></li>
                     @else
@@ -146,6 +127,8 @@
         </div>
     </div>
 </div>
+@else
+<div class="alert alert-info">No hay registros para mostrar.</div>
 @endif
 
 <!-- Import Modal -->

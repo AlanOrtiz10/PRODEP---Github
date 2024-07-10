@@ -52,6 +52,12 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function level()
+    {
+        return $this->belongsTo(Levels::class, 'level_id');
+    }
+    
+
 
 
 }

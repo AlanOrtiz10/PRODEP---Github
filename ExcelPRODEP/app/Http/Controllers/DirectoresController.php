@@ -17,18 +17,19 @@ class DirectoresController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'carrera' => 'required|string',
             'nivel' => 'required|string',
-            'director' => 'required|string',
+            'director' => 'required|string', 
         ]);
-
-        Directores::create([
-            'carrera' => $request->carrera,
-            'nivel' => $request->nivel,
-            'director' => $request->director,
-        ]);
-
+    
+    
+        $director = new Directores();
+        $director->carrera = $data['carrera'];
+        $director->nivel = $data['nivel'];
+        $director->director = $data['director'];
+        $director->save();
+    
         return redirect()->route('directores')->with('success', 'Director agregado correctamente');
     }
 
@@ -56,13 +57,15 @@ class DirectoresController extends Controller
         return redirect()->route('directores')->with('success', 'Director actualizado correctamente');
     }
 
-    public function destroy($id)
-    {
-        $director = Directores::findOrFail($id);
-        $director->delete();
 
-        return redirect()->route('directores')->with('success', 'Director eliminado correctamente');
-    }
+    public function destroy($id)
+{
+    $director = Directores::findOrFail($id);
+    $director->delete();
+
+    return redirect()->route('directores')->with('success', 'Director eliminado correctamente.');
+}
+
 
     public function export()
     {
