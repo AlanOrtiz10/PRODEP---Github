@@ -14,7 +14,14 @@ class DocenciaImport implements ToCollection
     public function collection(Collection $rows)
     {
         // Obtener el periodo escolar (cuatrimestre) desde la fila 3, columna A
-        $periodo_escolar = $rows[2][0];
+        $periodo_escolar_raw = $rows[2][0];
+
+        $pos = strpos($periodo_escolar_raw, ':');
+        if ($pos !== false) {
+            $periodo_escolar = trim(substr($periodo_escolar_raw, $pos + 1));
+        } else {
+            $periodo_escolar = trim($periodo_escolar_raw);
+        }
 
         // Validar si el periodo escolar está vacío y mostrar un mensaje de error
         if (empty($periodo_escolar)) {
