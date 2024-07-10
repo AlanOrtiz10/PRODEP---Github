@@ -13,11 +13,22 @@ class DocenciaController extends Controller
 {
     public function form()
     {
-        $data = Docencia::paginate(10); 
-        $profesores = Docencia::select('nombre_profesor', 'nombre_carrera')->distinct()->get()->groupBy('nombre_profesor')->map(function ($profesor) {
-            return $profesor->pluck('nombre_carrera')->unique();
-        });
-        return view('admin.pages.docencias.index', compact('data', 'profesores'));
+        $user = auth()->user();
+
+        if($user->level_id == 1){
+            $data = Docencia::paginate(10);
+
+        }
+        elseif ($user->level_id == 2) {
+            $formattedName = $user->apellido_paterno . ' ' . $user->apellido_materno . ' ' . $user->name;
+
+            $data = Docencia::whereRaw('BINARY nombre_profesor = ?', [$formattedName])->paginate(10);
+        }
+        
+        //dd($formattedName);
+        // dd($data);
+
+        return view('admin.pages.docencias.index', compact('data'));
     }
 
     public function import(Request $request)

@@ -14,27 +14,24 @@ class TutoriasController extends Controller
     
 
     public function form()
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    if($user->level_id == 1){
-        $data = Tutorias::paginate(10);
+        if($user->level_id == 1){
+            $data = Tutorias::paginate(10);
 
+        }
+        elseif ($user->level_id == 2) {
+            $formattedName = $user->apellido_paterno . ' ' . $user->apellido_materno . ' ' . $user->name;
+
+            $data = Tutorias::whereRaw('BINARY tutor = ?', [$formattedName])->paginate(10);
+        }
+        
+        //dd($formattedName);
+        // dd($data);
+
+        return view('admin.pages.tutorias.index', compact('data'));
     }
-    elseif ($user->level_id == 2) {
-        $formattedName = $user->apellido_paterno . ' ' . $user->apellido_materno . ' ' . $user->name;
-
-        $data = Tutorias::whereRaw('BINARY tutor = ?', [$formattedName])->paginate(10);
-    }
-
-    
-    
-    
-    //dd($formattedName);
-    // dd($data);
-
-    return view('admin.pages.tutorias.index', compact('data'));
-}
 
     
     

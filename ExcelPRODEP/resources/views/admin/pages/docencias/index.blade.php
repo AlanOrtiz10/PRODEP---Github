@@ -16,10 +16,14 @@
     {{ session('success') }}
 </div>
 @endif
-
 @if(session('error'))
 <div class="alert alert-danger">
     {{ session('error') }}
+</div>
+@endif
+@if ($errors->has('file'))
+<div class="alert alert-danger">
+    {{ $errors->first('file') }}
 </div>
 @endif
 
@@ -46,6 +50,12 @@
         </div>
     </div>
 </div>
+
+@if($data->isEmpty())
+<div class="alert alert-warning">
+    No se encontraron datos asociados a su cuenta de docencia.
+</div>
+@endif
 
 @if($data->isNotEmpty())
 <div class="card shadow mb-5 mt-4">
@@ -128,7 +138,6 @@
     </div>
 </div>
 @else
-<div class="alert alert-info">No hay registros para mostrar.</div>
 @endif
 
 <!-- Import Modal -->
@@ -174,10 +183,6 @@
                     <div class="form-group">
                         <label for="nombreProfesor">Nombre del profesor:</label>
                         <select class="form-control select2" id="nombreProfesor" data-placeholder="Selecciona un maestro">
-                            <option value="" hidden>Selecciona un maestro</option> <!-- Opción por defecto oculta -->
-                            @foreach($profesores as $profesor => $carreras)
-                                <option value="{{ $profesor }}" data-carreras="{{ json_encode($carreras) }}">{{ $profesor }}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
