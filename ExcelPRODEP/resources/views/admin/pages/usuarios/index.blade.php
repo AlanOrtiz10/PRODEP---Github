@@ -1,7 +1,7 @@
 @extends('admin.layouts.base')
 @section('title', 'Usuarios')
 @section('content')
-<h1 class="h3 mb-4 h3-custom">Datos de Usuarios</h1>
+<h1 class="h3 mb-4 h3-custom">Usuarios</h1>
 
 <!-- Breadcrumb -->
 <nav aria-label="breadcrumb">
