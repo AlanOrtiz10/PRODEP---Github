@@ -31,12 +31,12 @@
     <div class="mr-auto">
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
             <i class="fas fa-plus fa-xs icon-margin"></i> Importar registros
-        </button>        
+        </button>
     </div>
     <div class="text-right ml-auto">
         Exportar a
         <div class="d-inline-block">
-            <a href="{{route('export.docencia')}}">
+            <a href="{{ route('export.docencia') }}">
                 <div class="export-option">
                     <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
                 </div>
@@ -46,7 +46,6 @@
                     <img src="{{ asset('/assets/img/WordLogo.svg') }}" alt="WordLogo" class="export-icon"> Word
                 </div>
             </a>
-            
         </div>
     </div>
 </div>
@@ -99,7 +98,7 @@
                         <td>{{ $row->nombre_profesor }}</td>
                         <td>{{ $row->nombre_carrera }}</td>
                         <td>{{ $row->grupo }}</td>
-                        <td>{{ $row->cuatrimestre ? $row->cuatrimestre : 'No especificado' }}</td>
+                        <td>{{ $row->cuatrimestre ?: 'No especificado' }}</td>
                         <td>{{ $row->asignatura }}</td>
                         <td>{{ $row->numero_alumnos }}</td>
                         <td>{{ $row->asesorias_mes }}</td>
@@ -112,7 +111,6 @@
                                 </div>
                             </a>
                         </td>
-                       
                     </tr>
                     @endforeach
                 </tbody>
@@ -127,7 +125,7 @@
                     @endif
 
                     @for ($i = 1; $i <= $data->lastPage(); $i++)
-                        <li class="page-item {{ $i == $data->currentPage() ? 'active' : '' }}">
+                        <li class="page-item {{ $data->currentPage() == $i ? 'active' : '' }}">
                             <a href="{{ $data->url($i) }}" class="page-link">{{ $i }}</a>
                         </li>
                     @endfor
@@ -142,7 +140,6 @@
         </div>
     </div>
 </div>
-@else
 @endif
 
 <!-- Import Modal -->
@@ -172,6 +169,37 @@
         </div>
     </div>
 </div>
+
+
+<!-- Modal para actualizar registros -->
+@if(session('update_option'))
+<div class="modal fade show" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true" style="display: block; background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form id="updateForm" action="{{ route('update.imported.data') }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Actualizar registros</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>El periodo escolar {{ session('periodo_escolar') }} ya existe en la base de datos. ¿Desea actualizar los registros?</p>
+                    <input type="hidden" name="file_path" value="{{ session('file_path') }}">
+                    <input type="hidden" name="periodo_escolar" value="{{ session('periodo_escolar') }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
+
 
 <!-- Modal para generar constancia de docencia -->
 <div class="modal fade" id="constanciaModal" tabindex="-1" role="dialog" aria-labelledby="constanciaModalLabel" aria-hidden="true">
@@ -226,21 +254,26 @@
 
 @endsection
 
-
-<!-- Script personalizado -->
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('.select2').select2();
-        $('#nombreProfesor').on('change', function() {
-            var carreras = $(this).find('option:selected').data('carreras');
-            $('#carrera').empty();
-            $.each(carreras, function(index, carrera) {
-                $('#carrera').append($('<option>', {
-                    value: carrera,
-                    text: carrera
-                }));
-            });
-            $('#carrera').trigger('change');
+        // Mostrar el modal si la sesión 'update_option' está activa
+        @if(session('update_option'))
+            $('#updateModal').modal('show');
+        @endif
+
+        // Cerrar el modal al hacer clic en el botón 'Cancelar' dentro del modal
+        $('#updateModal button[data-dismiss="modal"]').on('click', function() {
+            $('#updateModal').modal('hide');
+        });
+
+        // Cerrar el modal al hacer clic en el botón de cerrar ('X')
+        $('#updateModal .close').on('click', function() {
+            $('#updateModal').modal('hide');
         });
     });
 </script>
+@endpush

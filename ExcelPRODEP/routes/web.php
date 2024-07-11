@@ -50,6 +50,8 @@ Route::middleware('auth')->group(function () {
     // Rutas de Docencia
     Route::get('/admin/docencia', [DocenciaController::class, 'form'])->name('import.docencia');
     Route::post('/admin/docencia/importar', [DocenciaController::class, 'import'])->name('import.excel.docencia');
+    Route::post('/admin/docencia/actualizar', [DocenciaController::class, 'updateImportedData'])->name('update.imported.data');
+    Route::post('/admin/docencia/cancel-update', [DocenciaController::class, 'cancelUpdate'])->name('cancel.update.imported.data');
     Route::get('/admin/docencia/export', [DocenciaController::class, 'export'])->name('export.docencia');
     Route::get('/generate-doc/{id}', [DocenciaController::class, 'generateDoc'])->name('generate.doc');
 
