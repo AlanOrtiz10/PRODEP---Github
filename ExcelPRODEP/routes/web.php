@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\DirectoresController;
 use App\Http\Controllers\DocenciaController;
+use App\Http\Controllers\IndividualizadaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TutoriasController;
@@ -58,6 +59,9 @@ Route::middleware('auth')->group(function () {
     // Rutas de Usuarios
     Route::get('/admin/usuarios', [UsersController::class, 'form'])->name('index.usuarios');
 
+    // Rutas de Constancia de Individualizada
+    Route::get('/admin/individualizada', [IndividualizadaController::class, 'form'])->name('index.individualizada');
+    Route::post('/admin/individualizada/importar', [IndividualizadaController::class, 'import'])->name('import.excel.individualizada');
 
 
     // Rutas para directores
