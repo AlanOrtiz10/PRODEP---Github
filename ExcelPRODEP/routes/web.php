@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
     // Rutas de Constancia de Individualizada
     Route::get('/admin/individualizada', [IndividualizadaController::class, 'form'])->name('index.individualizada');
     Route::post('/admin/individualizada/importar', [IndividualizadaController::class, 'import'])->name('import.excel.individualizada');
+    Route::get('/admin/individualizada/export', [IndividualizadaController::class, 'export'])->name('export.individualizada');
 
 
     // Rutas para directores

@@ -38,7 +38,7 @@
     <div class="text-right ml-auto">
         Exportar a
         <div class="d-inline-block">
-            <a href="{{ route('export.docencia') }}">
+            <a href="#" data-toggle="modal" data-target="#exportModal">
                 <div class="export-option">
                     <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
                 </div>
@@ -127,6 +127,64 @@
     </div>
 </div>
 @endif
+
+<!-- Modal para exportar registros -->
+<div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exportModalLabel">Exportar Registros</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('export.individualizada') }}" method="GET">
+                    @csrf
+
+                    <!-- Filtro por Asesor Académico (Solo Nivel 1) -->
+                    @if(auth()->user()->level_id == 1)
+                    <div class="form-group">
+                        <label for="asesor_academico">Asesor Académico:</label>
+                        <select class="form-control select2" id="asesor_academico" name="asesor_academico">
+                            <option value="">Todos</option>
+                            @foreach($asesores as $asesor)
+                                <option value="{{ $asesor }}">{{ $asesor }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
+                    <div class="form-group">
+                        <label for="asesor_academico">Periodo:</label>
+                        <select class="form-control" name="periodo" id="periodo">
+                            <option value="">Seleccionar</option>
+                            @foreach($periodos as $periodo)
+                                <option value="{{ $periodo }}">{{ $periodo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="asesor_academico">Carrera:</label>
+                        <select class="form-control" name="carrera" id="carrera">
+                            <option value="">Seleccionar</option>
+                            @foreach($carreras as $carrera)
+                                <option value="{{ $carrera }}">{{ $carrera }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Exportar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Import Modal -->
 <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"
