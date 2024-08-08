@@ -14,6 +14,7 @@
     <!-- Custom fonts for this template-->
     <link href="{{ asset('/assets/vendor/fontawesome-free/css/all.css') }}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Agregar enlaces a Bootstrap JS y sus dependencias -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -47,12 +48,12 @@
                 Inicio
             </div>
             <!-- Nav Item - Dashboard -->
+            
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.pages.dashboard.index')}}">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Panel de control</span></a>
+                <a class="nav-link" href="{{ route('admin.pages.dashboard.index') }}">
+                    <i class="fas fa-fw fa-home"></i>
+                    <span>Inicio</span></a>
             </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -63,37 +64,43 @@
             <!-- Nav Item - Charts -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('import.docencia') }}">
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fas fa-fw fa-chalkboard-teacher"></i>
                     <span>Docencia</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('import.tutorias') }}">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fas fa-fw fa-book"></i>
                     <span>Tutorías</span></a>
             </li>
             <!-- Nav Item - Tables -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('index.individualizada') }}">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fas fa-fw fa-user-graduate"></i>
                     <span>Individualizada</span></a>
             </li>
+            
             <!-- Divider -->
+            @if(auth()->user()->level_id == 1)
             <hr class="sidebar-divider d-none d-md-block">
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="{{route('directores')}}">
-                    <i class="fas fa-fw fa-table"></i>
+                <a class="nav-link" href="{{ route('directores') }}">
+                    <i class="fa-solid fa-briefcase"></i>
                     <span>Directores</span></a>
             </li>
-
-             <!-- Nav Item - Tables -->
-             <li class="nav-item">
-                <a class="nav-link" href="{{route('index.usuarios')}}">
-                    <i class="fas fa-fw fa-table"></i>
+            
+            
+            
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('index.usuarios') }}">
+                    <i class="fas fa-fw fa-user"></i> <!-- Icono de usuario con rol administrativo para Usuarios -->
                     <span>Usuarios</span></a>
             </li>
+            
+            @endif
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">

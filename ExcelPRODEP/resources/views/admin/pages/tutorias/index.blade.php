@@ -29,23 +29,26 @@
 
 <div class="d-flex justify-content-center align-items-center mb-3 mt-4">
     <div class="mr-auto">
+        @if(auth()->user()->level_id == 1)
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
             <i class="fas fa-plus fa-xs icon-margin"></i> Importar registros
-        </button>        
+        </button>
+        @endif
     </div>
     <div class="text-right ml-auto">
         Exportar a
         <div class="d-inline-block">
-            <a href="{{route('export.tutorias')}}">
+            <a href="#" data-toggle="modal" data-target="#exportModal">
                 <div class="export-option">
                     <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
                 </div>
             </a>
-            <div class="export-option ml-1">
-                <img src="{{ asset('/assets/img/WordLogo.svg') }}" alt="WordLogo" class="export-icon"> Word
-            </div>
+            <a href="#" data-toggle="modal" data-target="#constanciaModal">
+                <div class="export-option">
+                    <img src="{{ asset('/assets/img/WordLogo.svg') }}" alt="WordLogo" class="export-icon"> Word
+                </div>
+            </a>
         </div>
-        
     </div>
 </div>
 
@@ -73,19 +76,6 @@
                         <th>Periodo</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th>#</th>
-                        <th>Fecha</th>
-                        <th>Tutor</th>
-                        <th>Tipo</th>
-                        <th>Grupo</th>
-                        <th>Alumno(s)</th>
-                        <th>Estatus</th>
-                        <th>Motivo</th>
-                        <th>Periodo</th>
-                    </tr>
-                </tfoot>
                 <tbody>
                     @foreach ($data as $row)
                     <tr>
@@ -152,6 +142,67 @@
     </div>
 </div>
 @endif
+
+<!-- Excel Exportar Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exportModalLabel">Exportar a Excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('export.tutorias') }}" method="GET">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tipo_tutoria">Tipo de Tutoría</label>
+                        <select class="form-control" name="tipo_tutoria" id="tipo_tutoria">
+                            <option value="">Seleccionar</option>
+                            @foreach($tipos_tutoria as $tipo)
+                                <option value="{{ $tipo }}">{{ $tipo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="grupo">Grupo</label>
+                        <select class="form-control" name="grupo" id="grupo">
+                            <option value="">Seleccionar</option>
+                            @foreach($grupos as $grupo)
+                                <option value="{{ $grupo }}">{{ $grupo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Estatus</label>
+                        <select class="form-control" name="status" id="status">
+                            <option value="">Seleccionar</option>
+                            <option value="ABIERTA">Abierta</option>
+                            <option value="CERRADA">Cerrada</option>
+                        </select>
+                    </div>
+                    @if(auth()->user()->level_id == 1)
+                    <div class="form-group">
+                        <label for="maestro">Maestro</label>
+                        <select class="form-control" name="maestro" id="maestro">
+                            <option value="">Seleccionar</option>
+                            @foreach($maestros as $maestro)
+                                <option value="{{ $maestro }}">{{ $maestro }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Exportar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Import Modal -->
 <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"

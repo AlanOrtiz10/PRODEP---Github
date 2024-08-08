@@ -14,22 +14,38 @@ class DocenciaController extends Controller
     public function form()
     {
         $user = auth()->user();
-
-        if($user->level_id == 1){
-            $data = Docencia::paginate(10);
-
-        }
-        elseif ($user->level_id == 2) {
+        $query = Docencia::query();
+    
+        // Definir $formattedName solo si el usuario es un docente
+        $formattedName = null;
+        if ($user->level_id == 2) {
             $formattedName = $user->apellido_paterno . ' ' . $user->apellido_materno . ' ' . $user->name;
-
-            $data = Docencia::whereRaw('BINARY nombre_profesor = ?', [$formattedName])->paginate(10);
+            $query->whereRaw('BINARY nombre_profesor = ?', [$formattedName]);
         }
-        
-        //dd($formattedName);
-        // dd($data);
-
-        return view('admin.pages.docencias.index', compact('data'));
+    
+        $data = $query->paginate(10);
+    
+        // Obtener los periodos, grupos y carreras
+        if ($user->level_id == 1) {
+            // Administrador - obtener todos los periodos, grupos, carreras y profesores
+            $periodos = Docencia::distinct()->pluck('periodo_escolar');
+            $grupos = Docencia::distinct()->pluck('grupo');
+            $carreras = Docencia::distinct()->pluck('nombre_carrera');
+            $profesores = Docencia::distinct()->pluck('nombre_profesor');
+        } else {
+            // Docente - obtener solo los periodos, grupos y carreras del docente
+            $periodos = Docencia::where('nombre_profesor', $formattedName)->distinct()->pluck('periodo_escolar');
+            $grupos = Docencia::where('nombre_profesor', $formattedName)->distinct()->pluck('grupo');
+            $carreras = Docencia::where('nombre_profesor', $formattedName)->distinct()->pluck('nombre_carrera');
+            $profesores = collect(); // Vacío ya que no se usa para docentes
+        }
+    
+        return view('admin.pages.docencias.index', compact('data', 'periodos', 'grupos', 'carreras', 'profesores'));
     }
+
+    
+
+
 
     public function import(Request $request)
 {
@@ -177,10 +193,41 @@ class DocenciaController extends Controller
         return response()->download(storage_path('app/public/' . $fileName))->deleteFileAfterSend(true);
     }
 
-    public function export()
-    {
-        return Excel::download(new DocenciasExport, 'docencia.xlsx');
+    public function export(Request $request)
+{
+    $user = auth()->user();
+    $query = Docencia::query();
+
+    if ($request->filled('profesor') && $request->input('profesor') != '') {
+        $query->where('nombre_profesor', $request->input('profesor'));
     }
+    if ($request->filled('periodo') && $request->input('periodo') != '') {
+        $query->where('periodo_escolar', $request->input('periodo'));
+    }
+    if ($request->filled('grupo') && $request->input('grupo') != '') {
+        $query->where('grupo', $request->input('grupo'));
+    }
+    if ($request->filled('carrera') && $request->input('carrera') != '') {
+        $query->where('nombre_carrera', $request->input('carrera'));
+    }
+
+    if ($user->level_id == 1) {
+        // Administrador - no necesita filtrado adicional
+    } elseif ($user->level_id == 2) {
+        $formattedName = $user->apellido_paterno . ' ' . $user->apellido_materno . ' ' . $user->name;
+        $query->whereRaw('BINARY nombre_profesor = ?', [$formattedName]);
+    }
+
+    $data = $query->get();
+
+    $export = new DocenciasExport($data);
+    return Excel::download($export, 'docencia.xlsx');
+}
+
+    
+
+    
+    
 
 
 

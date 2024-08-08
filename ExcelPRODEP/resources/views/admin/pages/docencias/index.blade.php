@@ -29,14 +29,16 @@
 
 <div class="d-flex justify-content-center align-items-center mb-3 mt-4">
     <div class="mr-auto">
+        @if(auth()->user()->level_id == 1)
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
             <i class="fas fa-plus fa-xs icon-margin"></i> Importar registros
         </button>
+        @endif
     </div>
     <div class="text-right ml-auto">
         Exportar a
         <div class="d-inline-block">
-            <a href="{{ route('export.docencia') }}">
+            <a href="#" data-toggle="modal" data-target="#filterModal">
                 <div class="export-option">
                     <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
                 </div>
@@ -76,21 +78,6 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th>#</th>
-                        <th>Profesor</th>
-                        <th>Carrera</th>
-                        <th>Grupo</th>
-                        <th>Cuatrimestre</th>
-                        <th>Asignatura</th>
-                        <th>Alumnos</th>
-                        <th>Asesorias Mes</th>
-                        <th>Hrs. Semanales</th>
-                        <th>Periodo</th>
-                        <th>Acciones</th>
-                    </tr>
-                </tfoot>
                 <tbody>
                     @foreach ($data as $row)
                     <tr>
@@ -142,28 +129,60 @@
 </div>
 @endif
 
-<!-- Import Modal -->
-<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"
-    aria-hidden="true">
+<!-- Modal de Filtros -->
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="importModalLabel">Importar Registros</h5>
+                <h5 class="modal-title" id="filterModalLabel">Filtrar y Exportar a Excel</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('import.excel.docencia') }}" method="post" enctype="multipart/form-data">
-                @csrf
+            <form action="{{ route('export.docencia') }}" method="get">
                 <div class="modal-body">
+                    @if (auth()->user()->level_id == 1)
+                        <div class="form-group">
+                            <label for="profesor">Profesor:</label>
+                            <select class="form-control select2" id="profesor" name="profesor">
+                                <option value="">Todos los profesores</option>
+                                @foreach ($profesores as $profesor)
+                                    <option value="{{ $profesor }}">{{ $profesor }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div class="form-group">
-                        <label for="file">Seleccione un archivo Excel:</label>
-                        <input type="file" class="form-control-file" id="file" name="file">
+                        <label for="periodo">Periodo:</label>
+                        <select class="form-control select2" id="periodo" name="periodo">
+                            <option value="">Exportar todos los periodos</option>
+                            @foreach ($periodos as $periodo)
+                                <option value="{{ $periodo }}">{{ $periodo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="grupo">Grupo:</label>
+                        <select class="form-control select2" id="grupo" name="grupo">
+                            <option value="">Exportar todos los grupos</option>
+                            @foreach ($grupos as $grupo)
+                                <option value="{{ $grupo }}">{{ $grupo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="carrera">Carrera:</label>
+                        <select class="form-control select2" id="carrera" name="carrera">
+                            <option value="">Exportar todas las carreras</option>
+                            @foreach ($carreras as $carrera)
+                                <option value="{{ $carrera }}">{{ $carrera }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Importar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Exportar</button>
                 </div>
             </form>
         </div>
@@ -171,109 +190,105 @@
 </div>
 
 
-<!-- Modal para actualizar registros -->
-@if(session('update_option'))
-<div class="modal fade show" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true" style="display: block; background-color: rgba(0,0,0,0.5);">
+<!-- Modal de Importación -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form id="updateForm" action="{{ route('update.imported.data') }}" method="POST">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">Actualizar registros</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>El periodo escolar {{ session('periodo_escolar') }} ya existe en la base de datos. ¿Desea actualizar los registros?</p>
-                    <input type="hidden" name="file_path" value="{{ session('file_path') }}">
-                    <input type="hidden" name="periodo_escolar" value="{{ session('periodo_escolar') }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Actualizar</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-@endif
-
-
-
-<!-- Modal para generar constancia de docencia -->
-<div class="modal fade" id="constanciaModal" tabindex="-1" role="dialog" aria-labelledby="constanciaModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="constanciaModalLabel">Generar constancia de Docencia</h5>
+                <h5 class="modal-title" id="importModalLabel">Importar Datos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form>
+            <form action="{{ route('import.excel.docencia') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
                     <div class="form-group">
-                        <label for="nombreProfesor">Nombre del profesor:</label>
-                        <select class="form-control select2" id="nombreProfesor" data-placeholder="Selecciona un maestro">
-                        </select>
+                        <label for="file">Archivo Excel:</label>
+                        <input type="file" class="form-control-file" id="file" name="file" required>
                     </div>
+                    @if(auth()->user()->level_id == 1)
                     <div class="form-group">
-                        <label for="carrera">Carreras disponibles:</label>
-                        <select class="form-control" id="carrera">
-                            <!-- Opciones del select -->
-                        </select>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="update_existing" id="update_existing">
+                            <label class="form-check-label" for="update_existing">
+                                Actualizar datos existentes
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="cuatrimestre">Cuatrimestre:</label>
-                        <select class="form-control" id="cuatrimestre">
-                            <!-- Opciones del select -->
-                            @for ($i = 1; $i <= 10; $i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="horasExtras">Horas extras de enseñanza al mes:</label>
-                        <select class="form-control" id="horasExtras">
-                            <!-- Opciones del select -->
-                            @for ($i = 1; $i <= 10; $i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                </form>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Importar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Constancias -->
+<div class="modal fade" id="constanciaModal" tabindex="-1" role="dialog" aria-labelledby="constanciaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="constanciaModalLabel">Generar Constancias</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Generar</button>
-            </div>
+            <form action="" method="get">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="periodo">Periodo:</label>
+                        <select class="form-control select2" id="periodo" name="periodo">
+                            <option value="">Seleccionar periodo</option>
+                            @foreach ($periodos as $periodo)
+                                <option value="{{ $periodo }}">{{ $periodo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="grupo">Grupo:</label>
+                        <select class="form-control select2" id="grupo" name="grupo">
+                            <option value="">Seleccionar grupo</option>
+                            @foreach ($grupos as $grupo)
+                                <option value="{{ $grupo }}">{{ $grupo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="carrera">Carrera:</label>
+                        <select class="form-control select2" id="carrera" name="carrera">
+                            <option value="">Seleccionar carrera</option>
+                            @foreach ($carreras as $carrera)
+                                <option value="{{ $carrera }}">{{ $carrera }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Generar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 @endsection
 
-@push('scripts')
+@section('scripts')
+<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <script>
     $(document).ready(function() {
-        // Mostrar el modal si la sesión 'update_option' está activa
-        @if(session('update_option'))
-            $('#updateModal').modal('show');
-        @endif
-
-        // Cerrar el modal al hacer clic en el botón 'Cancelar' dentro del modal
-        $('#updateModal button[data-dismiss="modal"]').on('click', function() {
-            $('#updateModal').modal('hide');
-        });
-
-        // Cerrar el modal al hacer clic en el botón de cerrar ('X')
-        $('#updateModal .close').on('click', function() {
-            $('#updateModal').modal('hide');
-        });
+        $('.select2').select2();
     });
 </script>
-@endpush
+@endsection

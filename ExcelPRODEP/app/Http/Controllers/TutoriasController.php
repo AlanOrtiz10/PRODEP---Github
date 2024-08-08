@@ -14,28 +14,31 @@ class TutoriasController extends Controller
     
 
     public function form()
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        if($user->level_id == 1){
-            $data = Tutorias::paginate(10);
+    // Obtener los tipos de tutoría únicos para el filtro en el modal
+    $tipos_tutoria = Tutorias::distinct()->pluck('tipo_tutoria');
+    
+    // Obtener los maestros únicos
+    $maestros = Tutorias::distinct()->pluck('tutor');
+    
+    // Inicializar el grupo
+    $grupos = collect(); // Crear una colección vacía
 
-        }
-        elseif ($user->level_id == 2) {
-            $formattedName = $user->apellido_paterno . ' ' . $user->apellido_materno . ' ' . $user->name;
-
-            $data = Tutorias::whereRaw('BINARY tutor = ?', [$formattedName])->paginate(10);
-        }
-        
-        //dd($formattedName);
-        // dd($data);
-
-        return view('admin.pages.tutorias.index', compact('data'));
+    if ($user->level_id == 1) {
+        // Para administradores: mostrar todos los registros y todos los grupos
+        $data = Tutorias::paginate(10);
+        $grupos = Tutorias::distinct()->pluck('grupo');
+    } elseif ($user->level_id == 2) {
+        // Para docentes: filtrar registros por nombre del docente y grupos relacionados
+        $formattedName = $user->apellido_paterno . ' ' . $user->apellido_materno . ' ' . $user->name;
+        $data = Tutorias::whereRaw('BINARY tutor = ?', [$formattedName])->paginate(10);
+        $grupos = Tutorias::where('tutor', $formattedName)->distinct()->pluck('grupo');
     }
 
-    
-    
-
+    return view('admin.pages.tutorias.index', compact('data', 'tipos_tutoria', 'grupos', 'maestros'));
+}
 
 
     public function import(Request $request)
@@ -80,10 +83,38 @@ class TutoriasController extends Controller
         return $excelReader[2][0] ?? null;
     }
 
-    public function export()
-    {
-        return Excel::download(new TutoriasExport, 'tutorias.xlsx');
+    public function export(Request $request)
+{
+    // Obtener filtros
+    $tipo_tutoria = $request->input('tipo_tutoria');
+    $grupo = $request->input('grupo');
+    $status = $request->input('status');
+    $maestro = $request->input('maestro');
+
+    // Crear la consulta base
+    $query = Tutorias::query();
+
+    // Aplicar filtros
+    if ($tipo_tutoria) $query->where('tipo_tutoria', $tipo_tutoria);
+    if ($grupo) $query->where('grupo', $grupo);
+    if ($status) $query->where('estatus', $status);
+    
+    // Filtrar por maestro solo si el usuario es un maestro
+    if (auth()->user()->level_id == 2) {
+        $formattedName = auth()->user()->apellido_paterno . ' ' . auth()->user()->apellido_materno . ' ' . auth()->user()->name;
+        $query->where('tutor', $formattedName);
+    } elseif ($maestro && auth()->user()->level_id == 1) {
+        $query->where('tutor', $maestro);
     }
+
+    // Seleccionar solo los campos específicos
+    $data = $query->get(['fecha_registro', 'tutor', 'tipo_tutoria', 'grupo', 'alumno', 'estatus', 'motivo', 'periodo']);
+
+    return Excel::download(new TutoriasExport($data), 'tutorias.xlsx');
+}
+
+    
+
 
 
 }

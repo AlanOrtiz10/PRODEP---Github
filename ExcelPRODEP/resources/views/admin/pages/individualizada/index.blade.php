@@ -29,9 +29,11 @@
 
 <div class="d-flex justify-content-center align-items-center mb-3 mt-4">
     <div class="mr-auto">
+        @if(auth()->user()->level_id == 1)
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
             <i class="fas fa-plus fa-xs icon-margin"></i> Importar registros
         </button>
+        @endif
     </div>
     <div class="text-right ml-auto">
         Exportar a

@@ -2,16 +2,35 @@
 
 namespace App\Exports;
 
-use App\Models\Tutorias;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Support\Collection;
 
-class TutoriasExport implements FromView
+class TutoriasExport implements FromCollection, WithHeadings
 {
-    public function view(): View
+    protected $data;
+
+    public function __construct(Collection $data)
     {
-        return view('ExportsExcel.exportTutorias', [
-            'tutorias' => Tutorias::all()
-        ]);
+        $this->data = $data;
+    }
+
+    public function collection()
+    {
+        return $this->data;
+    }
+
+    public function headings(): array
+    {
+        return [
+            'Fecha Registro',
+            'Tutor',
+            'Tipo de Tutoría',
+            'Grupo',
+            'Alumno',
+            'Estatus',
+            'Motivo',
+            'Periodo',
+        ];
     }
 }
