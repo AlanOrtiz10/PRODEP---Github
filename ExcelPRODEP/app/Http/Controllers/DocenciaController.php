@@ -31,7 +31,12 @@ class DocenciaController extends Controller
             $periodos = Docencia::distinct()->pluck('periodo_escolar');
             $grupos = Docencia::distinct()->pluck('grupo');
             $carreras = Docencia::distinct()->pluck('nombre_carrera');
-            $profesores = Docencia::distinct()->pluck('nombre_profesor');
+            $profesores = Docencia::distinct()
+            ->orderBy('nombre_profesor', 'asc')
+            ->pluck('nombre_profesor');
+
+
+
         } else {
             // Docente - obtener solo los periodos, grupos y carreras del docente
             $periodos = Docencia::where('nombre_profesor', $formattedName)->distinct()->pluck('periodo_escolar');
@@ -223,6 +228,22 @@ class DocenciaController extends Controller
     $export = new DocenciasExport($data);
     return Excel::download($export, 'docencia.xlsx');
 }
+
+public function filterData(Request $request)
+{
+    $profesor = $request->get('profesor');
+
+    $periodos = Docencia::where('nombre_profesor', $profesor)->distinct()->pluck('periodo_escolar');
+    $grupos = Docencia::where('nombre_profesor', $profesor)->distinct()->pluck('grupo');
+    $carreras = Docencia::where('nombre_profesor', $profesor)->distinct()->pluck('nombre_carrera');
+
+    return response()->json([
+        'periodos' => $periodos,
+        'grupos' => $grupos,
+        'carreras' => $carreras,
+    ]);
+}
+
 
     
 

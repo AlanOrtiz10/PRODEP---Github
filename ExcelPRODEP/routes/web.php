@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/docencia/cancel-update', [DocenciaController::class, 'cancelUpdate'])->name('cancel.update.imported.data');
     Route::get('/admin/docencia/export', [DocenciaController::class, 'export'])->name('export.docencia');
     Route::get('/generate-doc/{id}', [DocenciaController::class, 'generateDoc'])->name('generate.doc');
+    Route::get('/filter-data', [DocenciaController::class, 'filterData'])->name('filter.data');
+
 
     // Rutas de Usuarios
     Route::get('/admin/usuarios', [UsersController::class, 'form'])->name('index.usuarios');

@@ -38,11 +38,12 @@
     <div class="text-right ml-auto">
         Exportar a
         <div class="d-inline-block">
-            <a href="#" data-toggle="modal" data-target="#filterModal">
-                <div class="export-option">
-                    <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
-                </div>
-            </a>
+            <a href="#" data-toggle="modal" 
+            data-target="{{ auth()->user()->level_id == 1 ? '#filterModal' : '#filterModalDocente' }}">
+             <div class="export-option">
+                 <img src="{{ asset('/assets/img/ExcelLogo.svg') }}" alt="ExcelLogo" class="export-icon"> Excel
+             </div>
+             </a>
             <a href="#" data-toggle="modal" data-target="#constanciaModal">
                 <div class="export-option">
                     <img src="{{ asset('/assets/img/WordLogo.svg') }}" alt="WordLogo" class="export-icon"> Word
@@ -128,8 +129,16 @@
     </div>
 </div>
 @endif
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Modal de Filtros -->
+<!-- Select2 JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<!-- Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<!-- Modal de Filtro Nivel Administrador -->
 <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -144,7 +153,7 @@
                     @if (auth()->user()->level_id == 1)
                         <div class="form-group">
                             <label for="profesor">Profesor:</label>
-                            <select class="form-control select2" id="profesor" name="profesor">
+                            <select class="form-control select" id="profesor" name="profesor">
                                 <option value="">Todos los profesores</option>
                                 @foreach ($profesores as $profesor)
                                     <option value="{{ $profesor }}">{{ $profesor }}</option>
@@ -154,7 +163,47 @@
                     @endif
                     <div class="form-group">
                         <label for="periodo">Periodo:</label>
-                        <select class="form-control select2" id="periodo" name="periodo">
+                        <select class="form-control select" id="periodo" name="periodo">
+                            <option value="">Exportar todos los periodos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="grupo">Grupo:</label>
+                        <select class="form-control select" id="grupo" name="grupo">
+                            <option value="">Exportar todos los grupos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="carrera">Carrera:</label>
+                        <select class="form-control select" id="carrera" name="carrera">
+                            <option value="">Exportar todas las carreras</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Exportar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Filtro de Nivel Docente -->
+<div class="modal fade" id="filterModalDocente" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterModalLabel">Filtrar y Exportar a Excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('export.docencia') }}" method="get">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="periodo">Periodo:</label>
+                        <select class="form-control select" id="periodo" name="periodo">
                             <option value="">Exportar todos los periodos</option>
                             @foreach ($periodos as $periodo)
                                 <option value="{{ $periodo }}">{{ $periodo }}</option>
@@ -163,7 +212,7 @@
                     </div>
                     <div class="form-group">
                         <label for="grupo">Grupo:</label>
-                        <select class="form-control select2" id="grupo" name="grupo">
+                        <select class="form-control select" id="grupo" name="grupo">
                             <option value="">Exportar todos los grupos</option>
                             @foreach ($grupos as $grupo)
                                 <option value="{{ $grupo }}">{{ $grupo }}</option>
@@ -172,7 +221,7 @@
                     </div>
                     <div class="form-group">
                         <label for="carrera">Carrera:</label>
-                        <select class="form-control select2" id="carrera" name="carrera">
+                        <select class="form-control select" id="carrera" name="carrera">
                             <option value="">Exportar todas las carreras</option>
                             @foreach ($carreras as $carrera)
                                 <option value="{{ $carrera }}">{{ $carrera }}</option>
@@ -188,6 +237,7 @@
         </div>
     </div>
 </div>
+
 
 
 <!-- Modal de Importación -->
@@ -241,7 +291,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="periodo">Periodo:</label>
-                        <select class="form-control select2" id="periodo" name="periodo">
+                        <select class="form-control select" id="periodo" name="periodo">
                             <option value="">Seleccionar periodo</option>
                             @foreach ($periodos as $periodo)
                                 <option value="{{ $periodo }}">{{ $periodo }}</option>
@@ -250,7 +300,7 @@
                     </div>
                     <div class="form-group">
                         <label for="grupo">Grupo:</label>
-                        <select class="form-control select2" id="grupo" name="grupo">
+                        <select class="form-control select" id="grupo" name="grupo">
                             <option value="">Seleccionar grupo</option>
                             @foreach ($grupos as $grupo)
                                 <option value="{{ $grupo }}">{{ $grupo }}</option>
@@ -259,7 +309,7 @@
                     </div>
                     <div class="form-group">
                         <label for="carrera">Carrera:</label>
-                        <select class="form-control select2" id="carrera" name="carrera">
+                        <select class="form-control select" id="carrera" name="carrera">
                             <option value="">Seleccionar carrera</option>
                             @foreach ($carreras as $carrera)
                                 <option value="{{ $carrera }}">{{ $carrera }}</option>
@@ -276,19 +326,45 @@
     </div>
 </div>
 
-@endsection
-
-@section('scripts')
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 <script>
     $(document).ready(function() {
+        // Inicializa Select2 en los elementos con la clase .select2
         $('.select2').select2();
+
+        $('#profesor').change(function() {
+            var profesor = $(this).val();
+
+            if (profesor) {
+                $.ajax({
+                    url: "{{ route('filter.data') }}",
+                    method: 'GET',
+                    data: { profesor: profesor },
+                    success: function(response) {
+                        // Limpiar los campos actuales
+                        $('#periodo').empty().append('<option value="">Exportar todos los periodos</option>');
+                        $('#grupo').empty().append('<option value="">Exportar todos los grupos</option>');
+                        $('#carrera').empty().append('<option value="">Exportar todas las carreras</option>');
+
+                        // Añadir las opciones nuevas
+                        response.periodos.forEach(function(periodo) {
+                            $('#periodo').append('<option value="' + periodo + '">' + periodo + '</option>');
+                        });
+
+                        response.grupos.forEach(function(grupo) {
+                            $('#grupo').append('<option value="' + grupo + '">' + grupo + '</option>');
+                        });
+
+                        response.carreras.forEach(function(carrera) {
+                            $('#carrera').append('<option value="' + carrera + '">' + carrera + '</option>');
+                        });
+                    }
+                });
+            }
+        });
     });
 </script>
+
+
+
 @endsection
+
